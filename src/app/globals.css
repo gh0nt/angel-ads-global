@@ -1,0 +1,165 @@
+﻿@import "tailwindcss";
+
+/* Tailwind v4 Theme Configuration */
+@theme {
+  --color-background: oklch(from hsl(240 89% 3%) l c h);
+  --color-foreground: oklch(from hsl(0 0% 100%) l c h);
+
+  --color-card: oklch(from hsl(240 50% 8%) l c h);
+  --color-card-foreground: oklch(from hsl(0 0% 100%) l c h);
+
+  --color-popover: oklch(from hsl(240 50% 8%) l c h);
+  --color-popover-foreground: oklch(from hsl(0 0% 100%) l c h);
+
+  /* Electric Yellow - Primary Brand Color */
+  --color-primary: oklch(from hsl(65 100% 49%) l c h);
+  /* #d7fa00 - Electric lime */
+  --color-primary-foreground: oklch(from hsl(240 89% 3%) l c h);
+
+  --color-secondary: oklch(from hsl(240 30% 15%) l c h);
+  --color-secondary-foreground: oklch(from hsl(0 0% 100%) l c h);
+
+  --color-muted: oklch(from hsl(240 20% 20%) l c h);
+  --color-muted-foreground: oklch(from hsl(240 5% 65%) l c h);
+
+  --color-accent: oklch(from hsl(65 100% 49%) l c h);
+  --color-accent-foreground: oklch(from hsl(240 89% 3%) l c h);
+
+  --color-destructive: oklch(from hsl(0 84% 60%) l c h);
+  --color-destructive-foreground: oklch(from hsl(0 0% 100%) l c h);
+
+  --color-border: oklch(from hsl(240 30% 18%) l c h);
+  --color-input: oklch(from hsl(240 30% 18%) l c h);
+  --color-ring: oklch(from hsl(65 100% 49%) l c h);
+
+  --radius: 0.75rem;
+}
+
+@layer base {
+  :root {
+    /* Legacy CSS Variables for compatibility */
+    --background: 240 89% 3%;
+    --foreground: 0 0% 100%;
+    --card: 240 50% 8%;
+    --card-foreground: 0 0% 100%;
+    --popover: 240 50% 8%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 65 100% 49%;
+    --primary-foreground: 240 89% 3%;
+    --secondary: 240 30% 15%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 20% 20%;
+    --muted-foreground: 240 5% 65%;
+    --accent: 65 100% 49%;
+    --accent-foreground: 240 89% 3%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 240 30% 18%;
+    --input: 240 30% 18%;
+    --ring: 65 100% 49%;
+
+    /* Custom Design Tokens */
+    --glow-primary: 65 100% 49%;
+    --gradient-primary: linear-gradient(135deg, hsl(65 100% 49% / 0.2), hsl(65 100% 49% / 0));
+    --shadow-glow: 0 0 30px hsl(65 100% 49% / 0.3);
+    --shadow-card: 0 8px 32px hsl(240 89% 3% / 0.5);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+  }
+}
+
+@layer utilities {
+  .glow-text {
+    text-shadow: 0 0 20px hsl(var(--glow-primary) / 0.5);
+  }
+
+  .glow-border {
+    box-shadow: 0 0 20px hsl(var(--glow-primary) / 0.4);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsl(var(--glow-primary) / 0.4);
+    }
+
+    50% {
+      box-shadow: 0 0 40px hsl(var(--glow-primary) / 0.6);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
