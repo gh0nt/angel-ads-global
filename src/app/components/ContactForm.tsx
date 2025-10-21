@@ -15,8 +15,11 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useLeadSubmission } from "@/hooks/use-lead-submission";
 
 const ContactForm = () => {
+  const { submitLead, isLoading, error, success } = useLeadSubmission();
+
   const [formData, setFormData] = useState({
     nombre: "",
     empresa: "",
@@ -32,10 +35,54 @@ const ContactForm = () => {
     ciudad: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("¡Solicitud enviada! Te contactaremos pronto.");
-    // Form submission logic would go here
+
+    // Validar campos requeridos
+    if (!formData.nombre || !formData.correo || !formData.empresa) {
+      toast.error("Por favor completa los campos obligatorios");
+      return;
+    }
+
+    try {
+      await submitLead({
+        nombre: formData.nombre,
+        empresa: formData.empresa,
+        sector: formData.sector,
+        correo: formData.correo,
+        whatsapp: formData.whatsapp,
+        pais: formData.pais,
+        ciudad: formData.ciudad,
+      });
+
+      toast.success(
+        "¡Solicitud enviada exitosamente! Te contactaremos pronto.",
+        {
+          duration: 5000,
+        }
+      );
+
+      // Resetear formulario después del éxito
+      setFormData({
+        nombre: "",
+        empresa: "",
+        sector: "",
+        pautaEnMetaAds: "",
+        tiempoPautando: "",
+        inversionMensual: "",
+        presupuestoMeta: "",
+        objetivoPrincipal: "",
+        correo: "",
+        whatsapp: "",
+        pais: "",
+        ciudad: "",
+      });
+    } catch (err) {
+      toast.error(
+        error || "Error al enviar la solicitud. Por favor intenta nuevamente.",
+        { duration: 5000 }
+      );
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -310,6 +357,20 @@ const ContactForm = () => {
                 </div>
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
+                  ⚠️ {error}
+                </div>
+              )}
+
+              {/* Success Message */}
+              {success && (
+                <div className="p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary text-sm">
+                  ✅ ¡Formulario enviado exitosamente! Te contactaremos pronto.
+                </div>
+              )}
+
               {/* Final Message */}
               <div className="p-6 rounded-lg bg-primary/5 border border-primary/20 space-y-3">
                 <p className="text-sm text-muted-foreground leading-relaxed">
@@ -328,9 +389,17 @@ const ContactForm = () => {
                   variant="hero"
                   size="xl"
                   className="w-full"
+                  disabled={isLoading}
                   aria-label="Solicitar diagnóstico estratégico ahora"
                 >
-                  Solicitar diagnóstico ahora
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin mr-2" />
+                      Enviando...
+                    </>
+                  ) : (
+                    "🚀 Solicitar diagnóstico ahora"
+                  )}
                 </Button>
               </div>
             </form>
