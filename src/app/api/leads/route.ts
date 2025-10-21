@@ -3,13 +3,25 @@ import { createClient } from "@supabase/supabase-js";
 import formData from "form-data";
 import Mailgun from "mailgun.js";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-);
+// Helper function to create Supabase client
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error(
+      "Supabase configuration is missing. Please check your environment variables."
+    );
+  }
+
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 export async function POST(req: Request) {
   try {
+    // Create Supabase client inside the function
+    const supabase = createSupabaseClient();
+
     const body = await req.json();
 
     // Validar campos requeridos
@@ -46,49 +58,58 @@ export async function POST(req: Request) {
 
     // Enviar correo con Mailgun
     try {
-      const mailgun = new Mailgun(formData);
-      const mg = mailgun.client({
-        username: "api",
-        key: process.env.MAILGUN_API_KEY!,
-      });
+      const mailgunApiKey = process.env.MAILGUN_API_KEY;
+      const mailgunDomain = process.env.MAILGUN_DOMAIN;
+      const mailgunFrom = process.env.MAILGUN_FROM;
 
-      await mg.messages.create(process.env.MAILGUN_DOMAIN!, {
-        from: process.env.MAILGUN_FROM!,
-        to: [process.env.NOTIFICATION_EMAIL || "angel@angelads.com"],
-        subject: `🚀 Nuevo Lead: ${nombre}`,
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #d7fa00; background: #010118; padding: 20px; text-align: center;">
-              ⚡ Nuevo Lead Generado
-            </h2>
-            <div style="padding: 20px; background: #f9f9f9;">
-              <h3>Información del Lead:</h3>
-              <table style="width: 100%; border-collapse: collapse;">
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Nombre:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${nombre}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Empresa:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
-                  empresa || "No especificado"
-                }</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Sector:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
-                  sector || "No especificado"
-                }</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Correo:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${correo}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>WhatsApp:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
-                  whatsapp || "No especificado"
-                }</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Ubicación:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
-                  pais || "No especificado"
-                }, ${ciudad || "No especificado"}</td></tr>
-                <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Fecha:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date().toLocaleString(
-                  "es-ES"
-                )}</td></tr>
-              </table>
+      if (!mailgunApiKey || !mailgunDomain || !mailgunFrom) {
+        console.warn(
+          "Mailgun configuration is missing. Email notification skipped."
+        );
+      } else {
+        const mailgun = new Mailgun(formData);
+        const mg = mailgun.client({
+          username: "api",
+          key: mailgunApiKey,
+        });
+
+        await mg.messages.create(mailgunDomain, {
+          from: mailgunFrom,
+          to: [process.env.NOTIFICATION_EMAIL || "angel@angelads.com"],
+          subject: `🚀 Nuevo Lead: ${nombre}`,
+          html: `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+              <h2 style="color: #d7fa00; background: #010118; padding: 20px; text-align: center;">
+                ⚡ Nuevo Lead Generado
+              </h2>
+              <div style="padding: 20px; background: #f9f9f9;">
+                <h3>Información del Lead:</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Nombre:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${nombre}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Empresa:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+                    empresa || "No especificado"
+                  }</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Sector:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+                    sector || "No especificado"
+                  }</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Correo:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${correo}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>WhatsApp:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+                    whatsapp || "No especificado"
+                  }</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Ubicación:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${
+                    pais || "No especificado"
+                  }, ${ciudad || "No especificado"}</td></tr>
+                  <tr><td style="padding: 8px; border-bottom: 1px solid #ddd;"><strong>Fecha:</strong></td><td style="padding: 8px; border-bottom: 1px solid #ddd;">${new Date().toLocaleString(
+                    "es-ES"
+                  )}</td></tr>
+                </table>
+              </div>
+              <div style="padding: 20px; background: #010118; color: white; text-align: center;">
+                <p>Responde rápido para maximizar la conversión 🎯</p>
+              </div>
             </div>
-            <div style="padding: 20px; background: #010118; color: white; text-align: center;">
-              <p>Responde rápido para maximizar la conversión 🎯</p>
-            </div>
-          </div>
-        `,
-        text: `
+          `,
+          text: `
 Nuevo Lead Generado:
 
 Nombre: ${nombre}
@@ -100,10 +121,11 @@ País/Ciudad: ${pais || "No especificado"}, ${ciudad || "No especificado"}
 Fecha: ${new Date().toLocaleString("es-ES")}
 
 Responde rápido para maximizar la conversión!
-        `,
-      });
+          `,
+        });
 
-      console.log("Email enviado exitosamente");
+        console.log("Email enviado exitosamente");
+      }
     } catch (emailError) {
       console.error("Error enviando email:", emailError);
       // No fallar la API si el email falla, pero log el error
@@ -126,6 +148,9 @@ Responde rápido para maximizar la conversión!
 // GET para obtener leads (opcional, para administración)
 export async function GET() {
   try {
+    // Create Supabase client inside the function
+    const supabase = createSupabaseClient();
+
     const { data, error } = await supabase
       .from("leads")
       .select("*")
