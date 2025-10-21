@@ -60,8 +60,8 @@ const ContactForm = () => {
             <div className="h-1 w-20 bg-gradient-to-r from-primary to-primary/0 mx-auto" />
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Si tu empresa ya invierte o quiere invertir en Meta Ads, completa
-              el siguiente formulario. Analizaré personalmente tu caso y te diré
-              si puedo ayudarte a escalar resultados.
+              el siguiente formulario. Analizaré tu caso para ofrecerte la mejor
+              estrategia para escalar resultados.
             </p>
           </div>
 

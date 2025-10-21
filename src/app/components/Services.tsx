@@ -9,7 +9,6 @@ import {
 import { GraduationCap, Search, Rocket, ArrowRight } from "lucide-react";
 
 const Services = () => {
-  
   const services = [
     {
       icon: GraduationCap,
@@ -129,22 +128,31 @@ const Services = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center space-y-6 p-12 rounded-2xl bg-gradient-to-r from-card to-card/50 border border-primary/20 animate-fade-in">
-          <p className="text-2xl md:text-3xl font-semibold">
+        <div className="text-center space-y-6 p-6 sm:p-12 rounded-2xl bg-gradient-to-r from-card to-card/50 border border-primary/20 animate-fade-in">
+          <p className="text-xl sm:text-2xl md:text-3xl font-semibold leading-tight">
             No vendo promesas, diseño{" "}
             <span className="text-primary">estrategias</span>.
           </p>
-          <p className="text-xl text-muted-foreground">
-            Si tu marca tiene potencial, la haré crecer.
+          <p className="text-lg sm:text-xl text-muted-foreground">
+            Hagamos que tu marca crezca y destaque en su mercado.
           </p>
-          <Button variant="hero" size="xl" className="group" asChild>
+          <Button
+            variant="hero"
+            size="xl"
+            className="group w-full sm:w-auto px-6 sm:px-10 py-4 text-sm sm:text-base font-bold"
+            asChild
+          >
             <a
               href="#contacto"
               aria-label="Agendar consultoría ahora con Ángel Vaca"
+              className="flex items-center justify-center gap-2"
             >
-              🎯 Agendar Consultoría Ahora
+              <span className="text-lg sm:text-xl">🎯</span>
+              <span className="whitespace-nowrap">
+                Agendar Consultoría Ahora
+              </span>
               <ArrowRight
-                className="w-5 h-5 group-hover:translate-x-1 transition-transform"
+                className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform flex-shrink-0"
                 aria-hidden="true"
               />
             </a>

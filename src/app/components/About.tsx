@@ -156,16 +156,16 @@ const About = () => {
                   <p className="text-sm font-semibold text-foreground mb-3">
                     📈 Resultados promedio:
                   </p>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
                     {stats.map((stat, index) => (
                       <div
                         key={index}
-                        className="text-center space-y-1 p-4 rounded-lg bg-background/50 hover:bg-background/80 transition-colors"
+                        className="text-center space-y-1 p-3 sm:p-4 rounded-lg bg-background/50 hover:bg-background/80 transition-colors border border-primary/10 hover:border-primary/30"
                       >
-                        <div className="text-2xl font-bold text-primary">
+                        <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
                           {stat.value}
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight">
                           {stat.label}
                         </div>
                       </div>

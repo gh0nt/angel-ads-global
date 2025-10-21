@@ -62,7 +62,7 @@ const Hero = () => {
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                 <span className="text-muted-foreground">
-                  +$10K/mes gestionados
+                  +$40K/mes gestionados
                 </span>
               </div>
               <div className="flex items-center gap-2">
